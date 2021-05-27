@@ -12,6 +12,7 @@ from keras.models import load_model
 import pickle
 import boto3
 from botocore.exceptions import NoCredentialsError
+from werkzeug.utils import secure_filename
 
 AWS_ACCESS_KEY_ID = "AKIAZDET2MTHTCIVUF2R"
 AWS_SECRET_ACCESS_KEY = "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"
@@ -192,6 +193,16 @@ def testGetImage():
       "attendance" : face_recognition_result,
       "sleepResult" : sleep_result
   })
+
+@bp.route('/imageTest', methods=['POST'])
+def sendImageTest():
+
+    f = request.files['file']
+    filename = secure_filename(f.filename)
+    f.save(os.path.join("C:/FocusHawkEyeMain", filename))
+
+    return 'image test success'
+
 
 
 # Train 이미지 구글 드라이브에 디렉토리에 맞춰서 저장    /   기존의 finalized_model 사용 / finalized 모델은 따로 로컬에서 만드는 모습 보여주기
