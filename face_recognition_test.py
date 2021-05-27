@@ -23,6 +23,8 @@ from sklearn.svm import SVC
 
 from sklearn.cluster import KMeans
 
+print("keras version ")
+print(keras.__version__)
 
 def extract_face(filename, required_size=(160, 160)):
 	# 파일에서 이미지 불러오기

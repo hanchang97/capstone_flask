@@ -23,31 +23,31 @@ def create_app():
 
     # focus 플랫폼 전용 폴더를 각자 로컬에 생성한다
     ### 이미 존재하는 경로인지 검사 ###
-    focus_main_directory = "C:/FocusHawkEyeMain"
-    try:
-        if not os.path.exists(focus_main_directory):
-            os.makedirs(focus_main_directory)  # 디렉토리 생성 / 그룹 폴더 생성
-            print("=== FocusHawkEyeMain folder created ===")
-    except OSError:
-        print("=== FocusHawkEyeMain folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
-
-    # 웹캠 캡쳐 후 test 이미지가 들어갈 경로
-    focus_capture_image_directory = focus_main_directory + '/webCamCapture/temp'
-    try:
-        if not os.path.exists(focus_capture_image_directory):
-            os.makedirs(focus_capture_image_directory)  # 디렉토리 생성 / 웹캠 캡쳐 이미지 폴더 생성
-            print("=== FocusHawkEye WebCam Capture folder created ===")
-    except OSError:
-        print("=== FocusHawkEye WebCam Capture folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
-
-    # face recognition에서 npz 파일 저장 될 경로
-    focus_npz_directory = focus_main_directory + '/npzSave'
-    try:
-        if not os.path.exists(focus_npz_directory):
-            os.makedirs(focus_npz_directory)  # 디렉토리 생성 / npz 파일 저장 폴더 생성
-            print("=== FocusHawkEye npz file save folder created ===")
-    except OSError:
-        print("=== FocusHawkEye npz file save folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+    # focus_main_directory = "C:/FocusHawkEyeMain"
+    # try:
+    #     if not os.path.exists(focus_main_directory):
+    #         os.makedirs(focus_main_directory)  # 디렉토리 생성 / 그룹 폴더 생성
+    #         print("=== FocusHawkEyeMain folder created ===")
+    # except OSError:
+    #     print("=== FocusHawkEyeMain folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+    #
+    # # 웹캠 캡쳐 후 test 이미지가 들어갈 경로
+    # focus_capture_image_directory = focus_main_directory + '/webCamCapture/temp'
+    # try:
+    #     if not os.path.exists(focus_capture_image_directory):
+    #         os.makedirs(focus_capture_image_directory)  # 디렉토리 생성 / 웹캠 캡쳐 이미지 폴더 생성
+    #         print("=== FocusHawkEye WebCam Capture folder created ===")
+    # except OSError:
+    #     print("=== FocusHawkEye WebCam Capture folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+    #
+    # # face recognition에서 npz 파일 저장 될 경로
+    # focus_npz_directory = focus_main_directory + '/npzSave'
+    # try:
+    #     if not os.path.exists(focus_npz_directory):
+    #         os.makedirs(focus_npz_directory)  # 디렉토리 생성 / npz 파일 저장 폴더 생성
+    #         print("=== FocusHawkEye npz file save folder created ===")
+    # except OSError:
+    #     print("=== FocusHawkEye npz file save folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
 
     return app
 

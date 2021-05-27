@@ -31,6 +31,9 @@ bp = Blueprint('main', __name__, url_prefix='/')
 resource_s3 = boto3.resource('s3', aws_access_key_id= AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
 client_s3 = boto3.client('s3', aws_access_key_id= AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
 
+print("tensorflow version ")
+print("tensor version : " + str(tf.__version__))
+
 def call_Model():
     global main_model
     #main_model = s3.Object('capstonefaceimg', 'load/facenet_keras.h5')
@@ -58,6 +61,51 @@ def call_face_Model():
 @bp.route('/')
 def hello_pybo2():
     return 'Hello, pybo2!!'
+
+@bp.route('/focusInit')
+def create_focus_folder():
+    focus_main_directory = "C:/FocusHawkEyeMain"
+    try:
+        if not os.path.exists(focus_main_directory):
+            os.makedirs(focus_main_directory)  # 디렉토리 생성 / 그룹 폴더 생성
+            print("=== FocusHawkEyeMain folder created ===")
+    except OSError:
+        print("=== FocusHawkEyeMain folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+
+    # 웹캠 캡쳐 후 test 이미지가 들어갈 경로
+    focus_capture_image_directory = focus_main_directory + '/webCamCapture/temp'
+    try:
+        if not os.path.exists(focus_capture_image_directory):
+            os.makedirs(focus_capture_image_directory)  # 디렉토리 생성 / 웹캠 캡쳐 이미지 폴더 생성
+            print("=== FocusHawkEye WebCam Capture folder created ===")
+    except OSError:
+        print("=== FocusHawkEye WebCam Capture folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+
+    # face recognition에서 npz 파일 저장 될 경로
+    focus_npz_directory = focus_main_directory + '/npzSave'
+    try:
+        if not os.path.exists(focus_npz_directory):
+            os.makedirs(focus_npz_directory)  # 디렉토리 생성 / npz 파일 저장 폴더 생성
+            print("=== FocusHawkEye npz file save folder created ===")
+    except OSError:
+        print("=== FocusHawkEye npz file save folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+
+    return 'folder create success'
+
+
+@bp.route('/load/model')
+def loadModel():
+    call_Model()
+    print('call model complete')
+    call_ypr_Model()
+    print('call ypr_model complete')
+    call_face_Model()
+    print('call face_model complete')
+    call_eye_Model()
+    print('call eye_model complete')
+
+    return 'load model success'
+
 
 @bp.route('/urlTest')
 def index():
@@ -146,7 +194,7 @@ def testGetImage():
   })
 
 
-# Train 이미지 구글 드라이브에 디렉토리에 맞춰서 저장
+# Train 이미지 구글 드라이브에 디렉토리에 맞춰서 저장    /   기존의 finalized_model 사용 / finalized 모델은 따로 로컬에서 만드는 모습 보여주기
 @bp.route('/groupImages', methods=['POST'])
 def getTrainImage():
 
