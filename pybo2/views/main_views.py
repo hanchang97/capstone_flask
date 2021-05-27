@@ -43,7 +43,7 @@ def call_Model():
 def call_eye_Model():
     global main_eye_model
     #main_eye_model = load_model(resource_s3.Object('capstonefaceimg','load/2021_05_19_05_31_31.h5'))
-    main_eye_model = load_model('load/2021_05_19_05_31_31.h5')
+    main_eye_model = load_model('2021_05_19_05_31_31.h5')
 
 
 def call_ypr_Model():
