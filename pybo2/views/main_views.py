@@ -142,7 +142,7 @@ def testGetImage():
 
   # 기존 코드
   #im.save(os.path.join("G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/val/temp","test.jpg"))
-  im.save(os.path.join("C:/FocusHawkEyeMain/webCamCapture", "test.jpg"))  # focus 전용 폴더에 저장
+  im.save(os.path.join("C:/FocusHawkEyeMain/webCamCapture/temp", "test.jpg"))  # focus 전용 폴더에 저장
   #위에 여기바꿔주세요~~~~~~~~~~~~
 
 
@@ -224,6 +224,8 @@ def getTrainImage():
     #s3.meta.client.upload_file('load/data/5-celebrity-faces-dataset/train', 'capstonefaceimg')
     #gdTestPath = "G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/train"  # 그룹이 추가되는 경로
 
+    gdTestPath = "C:/FocusHawkEyeMain/webCamCapture/train"  # 수업 전 유저 별 트레인 이미지 저장되는 경로
+
     #bucket_name = "capstonefaceimg"
     #directory_name = "load/data/5-celebrity-faces-dataset/train"  # it's name of your folders
     #client_s3.put_object(Bucket=bucket_name, Key=(directory_name + '/'))
@@ -232,15 +234,17 @@ def getTrainImage():
     #client_s3.put_object(Bucket=bucket_name, Key=(directory_name + '/'))   # S3 디렉토리 생성 코드
 
     #gdTestPath = "https://capstonefaceimg.s3.ap-northeast-2.amazonaws.com/load/data/5-celebrity-faces-dataset/train/"
-    gdTestPath = "G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/train"  # 그룹이 추가되는 경로
+    #gdTestPath = "G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/train"  # 그룹이 추가되는 경로
+    #gdTestPath = "G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/train"  # 그룹이 추가되는 경로
+
     #위에여기바꿔주세요 이거는 S3에서 가져오는겁니다요~~~~~~~~~~~~~
 
-    gdTestPath_group = gdTestPath + "/" + str(groupName)     # 그룹 경로 추가
+    #gdTestPath_group = gdTestPath + "/" + str(groupName)     # 그룹 경로 추가
 
     ### 이미 존재하는 경로인지 검사 ###
     try:
-        if not os.path.exists(gdTestPath_group):
-            os.makedirs(gdTestPath_group)  # 디렉토리 생성 / 그룹 폴더 생성
+        if not os.path.exists(gdTestPath):
+            os.makedirs(gdTestPath)  # 디렉토리 생성 / 트레인 이미지 들어갈 예정
     except OSError:
         print("Error : Cannot create group directory")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
 
@@ -256,7 +260,7 @@ def getTrainImage():
     for i in range(userNum):
         userId = req['groupData'][i]['userId']
         #print(str(userId))
-        gdTestPath_group_user = gdTestPath_group + "/user" + str(userId) # 그룹 내 유저별 경로 생성
+        gdTestPath_group_user = gdTestPath + "/user" + str(userId) # 그룹 내 유저별 경로 생성
         #gdTestPath_group_user = directory_name + '/' + str(groupName) + "/user" + str(userId)  # 그룹 내 유저별 경로 생성
 
         #client_s3.put_object(Bucket=bucket_name, Key=(gdTestPath_group_user + '/'))  # S3 디렉토리 생성
@@ -270,13 +274,13 @@ def getTrainImage():
         userImageNum = len(req['groupData'][i]['images'])  # 현재 유저 별 이미지 수가 달라서 따로 이미지 개수 변수 선언
 
         ## 각 유저 경로에 이미지 각각 등록되어있는 개수 만큼 저장
-        # for k in range(userImageNum):
-        #      userImage = req['groupData'][i]['images'][k]
-        #      starter = userImage.find(',')
-        #      userImageConvert = bytes(userImage[starter + 1:], encoding = "ascii")
-        #      im = Image.open(BytesIO(base64.b64decode(userImageConvert)))
-        #      #im.save(os.path.join(gdTestPath_group_user, "user" + str(userId) + "TrainImage" + str(k+1) +".jpg"))
-        #
+        for k in range(userImageNum):
+            userImage = req['groupData'][i]['images'][k]
+            starter = userImage.find(',')
+            userImageConvert = bytes(userImage[starter + 1:], encoding = "ascii")
+            im = Image.open(BytesIO(base64.b64decode(userImageConvert)))
+            im.save(os.path.join(gdTestPath_group_user, "user" + str(userId) + "TrainImage" + str(k+1) +".jpg"))
+
         #      # 생성한 S3 경로에 트레인 이미지 저장
         #      client_s3.meta.client.upload_file(gdTestPath_group_user + '/user' + str(k+1)+'.jpg',
         #                                        'capstonefaceimg', im)
