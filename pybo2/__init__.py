@@ -21,7 +21,7 @@ def create_app():
     main_views.call_eye_Model()
     print('call eye_model complete')
 
-    # focus 플랫폼 전용 폴더를 각자 로컬에 생성한다
+    # focus 플랫폼 전용 폴더를 우분투 서버 내부 경로에 생성한다
     ### 이미 존재하는 경로인지 검사 ###
     focus_main_directory = "C:/FocusHawkEyeMain"
     try:
@@ -48,6 +48,24 @@ def create_app():
              print("=== FocusHawkEye npz file save folder created ===")
     except OSError:
          print("=== FocusHawkEye npz file save folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+
+    # train set image 저장되는 경로
+    focus_train_directory = focus_main_directory + '/train'
+    try:
+        if not os.path.exists(focus_train_directory):
+            os.makedirs(focus_train_directory)  # 디렉토리 생성 / train 파일 저장 폴더 생성
+            print("=== FocusHawkEye train set save folder created ===")
+    except OSError:
+        print("=== FocusHawkEye train set save folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+
+    # train set image npz 저장 경로
+    focus_train_npz_directory = focus_main_directory + '/data'
+    try:
+        if not os.path.exists(focus_train_npz_directory):
+            os.makedirs(focus_train_npz_directory)  # 디렉토리 생성 / train 파일 저장 폴더 생성
+            print("=== FocusHawkEye train set npz file save folder created ===")
+    except OSError:
+        print("=== FocusHawkEye train set npz file save folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
 
     return app
 

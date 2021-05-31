@@ -84,12 +84,6 @@ def load_dataset(directory):
 		y.extend(labels)
 	return asarray(X), asarray(y)
 
-# 훈련 데이터셋 불러오기 -----> 여기 경로 수정해야한다.
-trainX, trainy = load_dataset('C:/FocusHawkEyeMain/train/')
-
-# 배열을 단일 압축 포맷 파일로 저장
-savez_compressed('C:/FocusHawkEyeMain/data/5-celebrity-faces-dataset_train.npz', trainX, trainy)
-
 
 # 하나의 얼굴의 얼굴 임베딩 얻기
 def get_embedding(model, face_pixels):
@@ -104,36 +98,45 @@ def get_embedding(model, face_pixels):
 	yhat = model.predict(samples)
 	return yhat[0]
 
-# 얼굴 데이터셋 불러오기
-data_train= load('C:/FocusHawkEyeMain/data/5-celebrity-faces-dataset_train.npz')
-trainX, trainy = data_train['arr_0'], data_train['arr_1']
+def face_recognition_training():
+	# 훈련 데이터셋 불러오기 -----> 여기 경로 수정해야한다.
+	trainX, trainy = load_dataset('C:/FocusHawkEyeMain/train/')
 
+	# 배열을 단일 압축 포맷 파일로 저장
+	savez_compressed('C:/FocusHawkEyeMain/data/5-celebrity-faces-dataset_train.npz', trainX, trainy)
 
-# facenet 모델 불러오기
-model = load_model("facenet_keras.h5")
+	# 얼굴 데이터셋 불러오기
+	data_train = load('C:/FocusHawkEyeMain/data/5-celebrity-faces-dataset_train.npz')
+	trainX, trainy = data_train['arr_0'], data_train['arr_1']
 
-# 훈련 셋에서 각 얼굴을 임베딩으로 변환하기
-newTrainX = list()
-for face_pixels in trainX:
-	embedding = get_embedding(model, face_pixels)
-	newTrainX.append(embedding)
-newTrainX = asarray(newTrainX)
-#print(newTrainX.shape)
+	# facenet 모델 불러오기
+	model = load_model("facenet_keras.h5")
 
-# 배열을 하나의 압축 포맷 파일로 저장
-savez_compressed('C:/FocusHawkEyeMain/data/5-celebrity-faces-embeddings_train.npz', newTrainX, trainy)
+	# 훈련 셋에서 각 얼굴을 임베딩으로 변환하기
+	newTrainX = list()
+	for face_pixels in trainX:
+		embedding = get_embedding(model, face_pixels)
+		newTrainX.append(embedding)
+	newTrainX = asarray(newTrainX)
+	# print(newTrainX.shape)
 
-# 데이터셋 불러오기
-data_train= load('C:/FocusHawkEyeMain/data/5-celebrity-faces-embeddings_train.npz')
+	# 배열을 하나의 압축 포맷 파일로 저장
+	savez_compressed('C:/FocusHawkEyeMain/data/5-celebrity-faces-embeddings_train.npz', newTrainX, trainy)
 
-trainX, trainy = data_train['arr_0'], data_train['arr_1']
+	# 데이터셋 불러오기
+	data_train = load('C:/FocusHawkEyeMain/data/5-celebrity-faces-embeddings_train.npz')
 
-# 입력 벡터 일반화
-in_encoder = Normalizer(norm='l2')
-trainX = in_encoder.transform(trainX)
+	trainX, trainy = data_train['arr_0'], data_train['arr_1']
 
-model = SVC(kernel='linear', probability=True)
-model.fit(trainX, trainy)
-# save the model to disk
-filename = 'finalized_model.h5'
-pickle.dump(model, open(filename, 'wb'))
+	# 입력 벡터 일반화
+	in_encoder = Normalizer(norm='l2')
+	trainX = in_encoder.transform(trainX)
+
+	model = SVC(kernel='linear', probability=True)
+	model.fit(trainX, trainy)
+	# save the model to disk
+	filename = 'finalized_model_new.h5'
+	pickle.dump(model, open(filename, 'wb'))
+
+	print(str('+++ new model created +++'))
+

@@ -13,6 +13,7 @@ import pickle
 import boto3
 from botocore.exceptions import NoCredentialsError
 from werkzeug.utils import secure_filename
+import face_recognition_train
 
 AWS_ACCESS_KEY_ID = "AKIAZDET2MTHTCIVUF2R"
 AWS_SECRET_ACCESS_KEY = "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"
@@ -224,7 +225,7 @@ def getTrainImage():
     #s3.meta.client.upload_file('load/data/5-celebrity-faces-dataset/train', 'capstonefaceimg')
     #gdTestPath = "G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/train"  # 그룹이 추가되는 경로
 
-    gdTestPath = "C:/FocusHawkEyeMain/webCamCapture/train"  # 수업 전 유저 별 트레인 이미지 저장되는 경로
+    gdTestPath = "C:/FocusHawkEyeMain/train"  # 수업 전 유저 별 트레인 이미지 저장되는 경로
 
     #bucket_name = "capstonefaceimg"
     #directory_name = "load/data/5-celebrity-faces-dataset/train"  # it's name of your folders
@@ -243,10 +244,10 @@ def getTrainImage():
 
     ### 이미 존재하는 경로인지 검사 ###
     try:
-        if not os.path.exists(gdTestPath):
-            os.makedirs(gdTestPath)  # 디렉토리 생성 / 트레인 이미지 들어갈 예정
+         if not os.path.exists(gdTestPath):
+             os.makedirs(gdTestPath)  # 디렉토리 생성 / 트레인 이미지 들어갈 예정
     except OSError:
-        print("Error : Cannot create group directory")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+         print("Error : Cannot create group directory")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
 
     # try:
     #     if not (gdTestPath_group):
@@ -290,3 +291,13 @@ def getTrainImage():
     return str(req['groupData'][0]['groupName'])
 
     ######################################################
+
+
+# Group member Train 요청
+@bp.route('/train', methods=['GET'])
+def memberTrain():
+
+    # 트레인 시작
+    face_recognition_train.face_recognition_training()
+
+    return 'train success!'
