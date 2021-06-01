@@ -175,7 +175,7 @@ def testGetImage():
   final_yaw_pitch_role_score = yawpitchraw.return_ypr_score(main_ypr_model)
 
   final_recognition_userID = final_recognition_score[-1]
-  print("usrID : " + str(final_recognition_userID))
+  print("usrID : " + str(final_recognition_userID))    # 현재는 user1이면 맨 마지막자리인 1을 주는 형태 / 이메일로 변경되어야 한다
 
   # 인식 결과로 알려준 유저 넘버와 테스트 이미지를 보낸 유저 넘버 일치 시 True
   if final_recognition_userID == userID:
