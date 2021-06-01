@@ -318,6 +318,19 @@ def getTrainImageForUserRegister():
     # userEmail = req['groupData']  # 유저 이메일
     # groupName = req['groupData'][0]['groupName']  # = 그룹 이름 / 그룹 이름은 모두 공통
 
+    userEmail = req['email']
+    userName = req['name']
+
+    print(str(userEmail))
+    print(str(userName))
+
+    file1 = request.files['file1']
+    filename1 = secure_filename(file1.filename)
+    print(str(filename1))
+
+
+    file1.save(os.path.join("C:/FocusHawkEyeMain" , filename1))
+
     return 'send 3 images success!!'
 
 
