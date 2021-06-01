@@ -95,3 +95,5 @@ def return_sleep_score(main_eye_model):
   # cv2.imshow('result', img)
   #print(state_l, state_r)
   return sleep_score
+
+# sleep score가 assign 전에 reference 되는 오류는 사진 인식 및 졸음 인식 모델 성능 문제

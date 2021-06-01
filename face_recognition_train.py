@@ -99,7 +99,7 @@ def get_embedding(model, face_pixels):
 	return yhat[0]
 
 def face_recognition_training():
-	# 훈련 데이터셋 불러오기 -----> 여기 경로 수정해야한다.
+	# 훈련 데이터셋 불러오기 -----> 여기 경로 수정해야한다. train 폴더 안에 user 이메일 별로 여러 폴더가 존재할 것임
 	trainX, trainy = load_dataset('C:/FocusHawkEyeMain/train/')
 
 	# 배열을 단일 압축 포맷 파일로 저장
@@ -135,7 +135,8 @@ def face_recognition_training():
 	model = SVC(kernel='linear', probability=True)
 	model.fit(trainX, trainy)
 	# save the model to disk
-	filename = 'finalized_model_new.h5'
+	#filename = 'finalized_model_new.h5'
+	filename = 'finalized_model.h5'      # 기존 모델 새로 트레인 후 업데이트된다 / face recognition 모델은 그룹마다 나눌 필요x
 	pickle.dump(model, open(filename, 'wb'))
 
 	print(str('+++ new model created +++'))

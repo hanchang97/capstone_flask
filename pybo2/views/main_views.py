@@ -33,6 +33,8 @@ bp = Blueprint('main', __name__, url_prefix='/')
 resource_s3 = boto3.resource('s3', aws_access_key_id= AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
 client_s3 = boto3.client('s3', aws_access_key_id= AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
 
+train_directory_by_group = 'C:/'
+
 print("tensorflow version ")
 print("tensor version : " + str(tf.__version__))
 
@@ -195,14 +197,14 @@ def testGetImage():
       "sleepResult" : sleep_result
   })
 
-@bp.route('/imageTest', methods=['POST'])
-def sendImageTest():
-
-    f = request.files['file']
-    filename = secure_filename(f.filename)
-    f.save(os.path.join("C:/FocusHawkEyeMain", filename))
-
-    return 'image test success'
+# @bp.route('/imageTest', methods=['POST'])
+# def sendImageTest():
+#
+#     f = request.files['file']
+#     filename = secure_filename(f.filename)
+#     f.save(os.path.join("C:/FocusHawkEyeMain", filename))
+#
+#     return 'image test success'
 
 
 
@@ -226,6 +228,9 @@ def getTrainImage():
     #gdTestPath = "G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/train"  # 그룹이 추가되는 경로
 
     gdTestPath = "C:/FocusHawkEyeMain/train"  # 수업 전 유저 별 트레인 이미지 저장되는 경로
+
+    # 그룹도 나눠야 하기에 그룹 별로 경로 나누기 추가
+    train_directory_by_group = gdTestPath + '/' + groupName    # 그룹이름으로 할것인지??
 
     #bucket_name = "capstonefaceimg"
     #directory_name = "load/data/5-celebrity-faces-dataset/train"  # it's name of your folders
@@ -286,7 +291,8 @@ def getTrainImage():
         #      client_s3.meta.client.upload_file(gdTestPath_group_user + '/user' + str(k+1)+'.jpg',
         #                                        'capstonefaceimg', im)
 
-
+        # 트레인 시작
+        #face_recognition_train.face_recognition_training()
 
     return str(req['groupData'][0]['groupName'])
 
@@ -301,3 +307,17 @@ def memberTrain():
     face_recognition_train.face_recognition_training()
 
     return 'train success!'
+
+
+# 회원가입 시 해당 유저의 이메일과 트레인용 이미지 3장 받기
+@bp.route('/send/train/image', methods=['POST'])
+def getTrainImageForUserRegister():
+
+    req = request.json  # json parsing
+
+    # userEmail = req['groupData']  # 유저 이메일
+    # groupName = req['groupData'][0]['groupName']  # = 그룹 이름 / 그룹 이름은 모두 공통
+
+    return 'send 3 images success!!'
+
+
