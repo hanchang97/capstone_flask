@@ -208,7 +208,8 @@ def testGetImage():
 
 
 
-# Train 이미지 구글 드라이브에 디렉토리에 맞춰서 저장    /   기존의 finalized_model 사용 / finalized 모델은 따로 로컬에서 만드는 모습 보여주기
+# Train 이미지 구글 드라이브에 디렉토리에 맞춰서 저장(구버전)    /   기존의 finalized_model 사용 / finalized 모델은 따로 로컬에서 만드는 모습 보여주기
+# 신버전 -> 우분투 서버 환경 디렉토리에 저장
 @bp.route('/groupImages', methods=['POST'])
 def getTrainImage():
 
@@ -309,27 +310,48 @@ def memberTrain():
     return 'train success!'
 
 
-# 회원가입 시 해당 유저의 이메일과 트레인용 이미지 3장 받기
+# 회원가입 시 해당 유저의 이메일과 트레인용 이미지 3장 받기  /  train 폴더 안에 유저 이메일 별로 3장씩 저장
 @bp.route('/send/train/image', methods=['POST'])
 def getTrainImageForUserRegister():
 
-    req = request.json  # json parsing
+    #req = request.json  # json parsing  req 프린트 찍으니 None으로 나왔음
+    #req = request.get_json()
 
-    # userEmail = req['groupData']  # 유저 이메일
-    # groupName = req['groupData'][0]['groupName']  # = 그룹 이름 / 그룹 이름은 모두 공통
+    # 회원가입 성공한 유저 이메일 정보 가져온다
+    req = request.form
 
-    userEmail = req['email']
-    userName = req['name']
+    print(str(req))
+    print(str(req['email']))
 
-    print(str(userEmail))
-    print(str(userName))
+    focus_train_image_directory = "C:/FocusHawkEyeMain/train"
+    userTrainImageDirectory = focus_train_image_directory + "/" + req['email']
+    try:
+        if not os.path.exists(userTrainImageDirectory):
+            os.makedirs(userTrainImageDirectory)  # 디렉토리 생성 / train 파일 저장 폴더 생성
+            print("=== FocusHawkEye user "+ req['email'] + " train image file save folder created ===")
+    except OSError:
+        print("=== "+ req['email'] +" save folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
 
-    file1 = request.files['file1']
-    filename1 = secure_filename(file1.filename)
+    # 이미지 3장 받는 부분
+    req_file1 = request.files['file1']
+    filename1 = secure_filename(req_file1.filename)
+
+    req_file2 = request.files['file2']
+    filename2 = secure_filename(req_file2.filename)
+
+    req_file3 = request.files['file3']
+    filename3 = secure_filename(req_file3.filename)
+
     print(str(filename1))
+    print(str(filename2))
+    print(str(filename3))
+
+    req_file1.save(os.path.join(userTrainImageDirectory, filename1))
+    req_file2.save(os.path.join(userTrainImageDirectory, filename2))
+    req_file3.save(os.path.join(userTrainImageDirectory, filename3))
 
 
-    file1.save(os.path.join("C:/FocusHawkEyeMain" , filename1))
+    print(str(req['email'] + ' train image save success!'))
 
     return 'send 3 images success!!'
 
