@@ -136,6 +136,7 @@ def testGetImage():
 
   userID = request.form['userId']
   groupID = request.form['groupId']
+  userEmail = request.form['userEmail']
 
   #print(str('userId' + str(userID)))
   #print(str('groupId') + str(groupID))
@@ -174,11 +175,12 @@ def testGetImage():
   final_sleep_score = sleep_test.return_sleep_score(main_eye_model)
   final_yaw_pitch_role_score = yawpitchraw.return_ypr_score(main_ypr_model)
 
-  final_recognition_userID = final_recognition_score[-1]
-  print("usrID : " + str(final_recognition_userID))    # 현재는 user1이면 맨 마지막자리인 1을 주는 형태 / 이메일로 변경되어야 한다
+  #final_recognition_userID = final_recognition_score[-1]
+  print("webcam userEmail : " + str(userEmail))
+  print("test result userEmail : " + str(final_recognition_score))    # 현재는 user1이면 맨 마지막자리인 1을 주는 형태 / 이메일로 변경되어야 한다
 
   # 인식 결과로 알려준 유저 넘버와 테스트 이미지를 보낸 유저 넘버 일치 시 True
-  if final_recognition_userID == userID:
+  if final_recognition_score == userEmail:
       face_recognition_result = True
 
   # 두 눈중 하나라도 음수가 나온다면 True를 준다
@@ -187,7 +189,7 @@ def testGetImage():
 
 
   return jsonify({
-      "name" : final_recognition_score,
+      "testResultEmail" : str(final_recognition_score),
       "sleepLeft" : str(final_sleep_score[0]),
       "sleepRight" : str(final_sleep_score[1]),
       "yaw" : str(final_yaw_pitch_role_score[0]),
