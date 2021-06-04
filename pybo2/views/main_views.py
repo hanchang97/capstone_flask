@@ -23,6 +23,13 @@ client_s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                          region_name=AWS_DEFAULT_REGION)
 
+AWS_ACCESS_KEY_ID_REK = "AKIAZDET2MTHQUAZ3XNJ"
+AWS_SECRET_ACCESS_KEY_REK = "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"
+AWS_DEFAULT_REGION_REK = "ap-northeast-2"
+
+client_rekognition = boto3.client('rekognition', aws_access_key_id=AWS_ACCESS_KEY_ID_REK,
+                         aws_secret_access_key=AWS_SECRET_ACCESS_KEY_REK,
+                         region_name=AWS_DEFAULT_REGION_REK)
 
 bp = Blueprint('main', __name__, url_prefix='/')
 # main_model = None
@@ -144,10 +151,13 @@ def testGetImage():
 
   print(im)
 
+
+
   # 기존 코드
   #im.save(os.path.join("G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/val/temp","test.jpg"))
   im.save(os.path.join("C:/FocusHawkEyeMain/webCamCapture/temp", "test.jpg"))  # focus 전용 폴더에 저장
   #위에 여기바꿔주세요~~~~~~~~~~~~
+
 
 
   #im.save(s3.Object('capstonefaceimg', 'load/data/5-celebrity-faces-dataset/val/temp","test.jpg'))
@@ -175,6 +185,41 @@ def testGetImage():
   final_sleep_score = sleep_test.return_sleep_score(main_eye_model)
   final_yaw_pitch_role_score = yawpitchraw.return_ypr_score(main_ypr_model)
 
+
+  #### 웹캠 캡쳐해서 받은 사진이 우분투 환경에서 저장되고 그것을 가져와서 s3에 저장  ## yawpitchroll ver2를 위한 작업
+  test_data = open('C:/FocusHawkEyeMain/webCamCapture/temp/test.jpg', 'rb')
+
+  s3 = boto3.resource(
+      's3',
+      aws_access_key_id=AWS_ACCESS_KEY_ID,
+      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+  )
+  s3.Bucket('capstonefaceimg').put_object(
+      Key='test.jpg', Body=test_data, ContentType='image/jpg'
+  )
+
+  print(str('test image upload to s3 ===>>> success!'))
+
+  response = client_rekognition.detect_faces(
+      Image={
+          'S3Object': {
+              'Bucket': 'capstonefaceimg',
+              'Name': 'test.jpg',
+          }
+      }
+  )
+
+  print(" new yaw pitch roll test by S2 changhee S2 & seyoung ")
+  print(response['FaceDetails'][0]['Pose'])
+
+  response2 = response['FaceDetails'][0]['Pose']
+
+  newRoll = round(response2['Roll'],2)
+  newPitch = round(response2['Pitch'], 2)
+  newYaw = round(response2['Yaw'], 2)
+
+################
+
   #final_recognition_userID = final_recognition_score[-1]
   print("webcam userEmail : " + str(userEmail))
   print("test result userEmail : " + str(final_recognition_score))    # 현재는 user1이면 맨 마지막자리인 1을 주는 형태 / 이메일로 변경되어야 한다
@@ -196,7 +241,10 @@ def testGetImage():
       "pitch" : str(final_yaw_pitch_role_score[1]),
       "roll" : str(final_yaw_pitch_role_score[2]),
       "attendance" : face_recognition_result,
-      "sleepResult" : sleep_result
+      "sleepResult" : sleep_result,
+      "yaw2" : str(newYaw),
+      "roll2" : str(newRoll),
+      "pitch2" : str(newPitch)
   })
 
 # @bp.route('/imageTest', methods=['POST'])
