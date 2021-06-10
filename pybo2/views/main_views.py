@@ -195,7 +195,7 @@ def testGetImage():
 
   final_recognition_score = face_recognition_test.return_score(main_model, main_face_model, userEmail)
   final_sleep_score = sleep_test.return_sleep_score(main_eye_model, userEmail)
-  final_yaw_pitch_role_score = yawpitchraw.return_ypr_score(main_ypr_model)
+  final_yaw_pitch_role_score = yawpitchraw.return_ypr_score(main_ypr_model, userEmail)
 
 
   #### 웹캠 캡쳐해서 받은 사진이 우분투 환경에서 저장되고 그것을 가져와서 s3에 저장  ## yawpitchroll ver2를 위한 작업
