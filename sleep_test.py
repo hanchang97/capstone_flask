@@ -40,10 +40,10 @@ def crop_eye(img, eye_points):
     return eye_img, eye_rect
 
 #img_ori = cv2.imread('G:/내 드라이브/capstone_2/datadata/5-celebrity-faces-dataset/val/temp/test.jpg')
-def return_sleep_score(main_eye_model):
+def return_sleep_score(main_eye_model, userEmail):
   print(type(main_eye_model))
   #img_array = np.fromfile('G:/내 드라이브/capstone_2/datadata/5-celebrity-faces-dataset/val/temp/test.jpg', np.uint8)
-  img_array = np.fromfile('C:/FocusHawkEyeMain/webCamCapture/temp/test.jpg', np.uint8)
+  img_array = np.fromfile('C:/FocusHawkEyeMain/webCamCapture/temp/'+ userEmail +'/capture/test.jpg', np.uint8)
   #로컬에다 저장하는 애들이에요 val/temp/test 폴더 안에 test.jpg 가져오기
 
 

@@ -91,9 +91,9 @@ def compute_features(face_points):
     return np.array(features).reshape(1, -1)
 
 
-def return_ypr_score(main_ypr_model):
+def return_ypr_score(main_ypr_model, userEmail):
     #img_array = np.fromfile('G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/val/temp/test.jpg', np.uint8)
-    img_array = np.fromfile('C:/FocusHawkEyeMain/webCamCapture/temp/test.jpg', np.uint8)
+    img_array = np.fromfile('C:/FocusHawkEyeMain/webCamCapture/temp/'+ userEmail +'/capture/test.jpg', np.uint8)
     #로컬에서 가져오는 애들이에요~~~ val/temp/test.jpg 가져오는 것
 
 

@@ -97,10 +97,10 @@ def get_embedding(main_model, face_pixels):
 	yhat = main_model.predict(samples)
 	return yhat[0]
 
-def return_score(main_model, main_face_model):
+def return_score(main_model, main_face_model, userEmail):
 	print(type(main_model))
 	#testX, testy = load_dataset('G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/val/')
-	testX, testy = load_dataset('C:/FocusHawkEyeMain/webCamCapture/')
+	testX, testy = load_dataset('C:/FocusHawkEyeMain/webCamCapture/' + userEmail)
 	#위에 여기바꿔주세요 얘네는 로컬에서 받는 애들~~~~~~~~~~~~~이 경로에서 test.jpg가 있는 상위 폴더 val/temp/test.jpg를 가져오는거임
 
 	#savez_compressed('G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset_test.npz', testX, testy)

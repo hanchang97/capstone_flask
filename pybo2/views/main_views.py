@@ -151,11 +151,23 @@ def testGetImage():
 
   print(im)
 
+  #웹캠 캡쳐 이미지도 유저 별 폴더로 나누어 저장
+
+  focusCaptureByEmail = "C:/FocusHawkEyeMain/webCamCapture/temp/" + userEmail + "/capture"
+
+  try:
+      if not os.path.exists(focusCaptureByEmail):
+          os.makedirs(focusCaptureByEmail)  # 디렉토리 생성 / 웹캠 캡쳐 이미지 폴더 유저별 생성
+          print("=== FocusHawkEye WebCam Capture folder created ===")
+  except OSError:
+      print("=== FocusHawkEye WebCam Capture folder already exists ===")  # 이미 생성된 폴더의 경우 다음으로 넘어간다
+
 
 
   # 기존 코드
   #im.save(os.path.join("G:/내 드라이브/capstone_2/data/5-celebrity-faces-dataset/val/temp","test.jpg"))
-  im.save(os.path.join("C:/FocusHawkEyeMain/webCamCapture/temp", "test.jpg"))  # focus 전용 폴더에 저장
+  #im.save(os.path.join("C:/FocusHawkEyeMain/webCamCapture/temp", "test.jpg"))  # focus 전용 폴더에 저장
+  im.save(os.path.join(focusCaptureByEmail, "test.jpg"))  # focus 전용 폴더에 저장
   #위에 여기바꿔주세요~~~~~~~~~~~~
 
 
@@ -181,13 +193,13 @@ def testGetImage():
 
   ## 분석?
 
-  final_recognition_score = face_recognition_test.return_score(main_model, main_face_model)
-  final_sleep_score = sleep_test.return_sleep_score(main_eye_model)
+  final_recognition_score = face_recognition_test.return_score(main_model, main_face_model, userEmail)
+  final_sleep_score = sleep_test.return_sleep_score(main_eye_model, userEmail)
   final_yaw_pitch_role_score = yawpitchraw.return_ypr_score(main_ypr_model)
 
 
   #### 웹캠 캡쳐해서 받은 사진이 우분투 환경에서 저장되고 그것을 가져와서 s3에 저장  ## yawpitchroll ver2를 위한 작업
-  test_data = open('C:/FocusHawkEyeMain/webCamCapture/temp/test.jpg', 'rb')
+  test_data = open('C:/FocusHawkEyeMain/webCamCapture/temp/' + userEmail +'/capture/test.jpg', 'rb')
 
   s3 = boto3.resource(
       's3',
@@ -195,7 +207,7 @@ def testGetImage():
       aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
   )
   s3.Bucket('capstonefaceimg').put_object(
-      Key='test.jpg', Body=test_data, ContentType='image/jpg'
+      Key= userEmail +'_test.jpg', Body=test_data, ContentType='image/jpg'
   )
 
   print(str('test image upload to s3 ===>>> success!'))
@@ -204,7 +216,7 @@ def testGetImage():
       Image={
           'S3Object': {
               'Bucket': 'capstonefaceimg',
-              'Name': 'test.jpg',
+              'Name': userEmail + '_test.jpg',
           }
       }
   )
